@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/ABHIJAT-DEV/morphe-google-photos/compare/v1.0.0...v1.0.1) (2026-11-15)
+
+### 🐛 Bug Fixes
+
+* **Google Photos:** reference table-mapping parameter by v-register in Upload photos only entry hook ([7b3a7ad](https://github.com/ABHIJAT-DEV/morphe-google-photos/commit/7b3a7ad1d8ecff0965a14566a9c12fc38c9b7e81))
+
 ## 1.0.0 (2026-11-15)
 
 ### 🐛 Bug Fixes
