@@ -6,6 +6,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.googlephotos.misc.extension.sharedExtensionPatch
 import app.morphe.patches.shared.compat.AppCompatibilities
 import app.morphe.util.findMutableMethodOf
+import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
@@ -64,12 +65,30 @@ val uploadPhotosOnlyPatch = bytecodePatch(
         )
 
         // At entry, tell the extension which media table this query targets
-        // (p1 is the Lujd table mapping: LOCAL_MEDIA, LOCAL_PRIVATE_MEDIA or
-        // LOCKED_FOLDER), so it can exclude videos on the right type column.
+        // (the first parameter is the Lujd table mapping: LOCAL_MEDIA,
+        // LOCAL_PRIVATE_MEDIA or LOCKED_FOLDER), so it can exclude videos on
+        // the right type column.
+        //
+        // The parameter is referenced by its v-register, NOT as p1: this
+        // method is obtained via findMutableMethodOf, and for methods proxied
+        // that way the inline smali compiler does not receive the parameter
+        // list, so a p-register reference fails to compile and the patcher
+        // aborts with a misleading "Collection is empty" PatchException.
+        // Parameter registers sit at the end of the register frame, so the
+        // first parameter's v-register can be computed exactly.
+        val implementation = mutableMethod.implementation
+            ?: throw PatchException("Backup queue query builder has no implementation.")
+        val isStatic = AccessFlags.STATIC.isSet(mutableMethod.accessFlags)
+        var parameterRegisterCount = if (isStatic) 0 else 1
+        for (type in mutableMethod.parameterTypes) {
+            parameterRegisterCount += if (type == "J" || type == "D") 2 else 1
+        }
+        val firstParameterRegister = implementation.registerCount - parameterRegisterCount +
+            if (isStatic) 0 else 1
         mutableMethod.addInstructions(
             0,
             """
-            invoke-static { p1 }, Lapp/morphe/extension/shared/patches/PhotosOnlyBackupFilter;->onBackupQueryStart(Ljava/lang/Object;)V
+            invoke-static { v$firstParameterRegister }, Lapp/morphe/extension/shared/patches/PhotosOnlyBackupFilter;->onBackupQueryStart(Ljava/lang/Object;)V
             """.trimIndent(),
         )
     }
