@@ -69,11 +69,15 @@ val uploadPhotosOnlyPatch = bytecodePatch(
         // LOCAL_PRIVATE_MEDIA or LOCKED_FOLDER), so it can exclude videos on
         // the right type column.
         //
-        // The parameter is referenced by its v-register, NOT as p1: this
-        // method is obtained via findMutableMethodOf, and for methods proxied
-        // that way the inline smali compiler does not receive the parameter
-        // list, so a p-register reference fails to compile and the patcher
-        // aborts with a misleading "Collection is empty" PatchException.
+        // The parameter cannot be passed to the invoke directly, under either
+        // name: this builder has 36 registers, so its parameters live at
+        // v30-v35, and the invoke-* instruction format (35c) can only encode
+        // registers v0-v15. Referencing v31 (or p1, the same register) makes
+        // the inline smali compiler reject the snippet ("Invalid register:
+        // v31. Must be between v0 and v15") and the patcher then aborts with
+        // a misleading "Collection is empty" PatchException. So the parameter
+        // is first moved into v0 — a scratch register here: the builder's own
+        // first instruction overwrites v0 before anything reads it.
         // Parameter registers sit at the end of the register frame, so the
         // first parameter's v-register can be computed exactly.
         val implementation = mutableMethod.implementation
@@ -88,7 +92,8 @@ val uploadPhotosOnlyPatch = bytecodePatch(
         mutableMethod.addInstructions(
             0,
             """
-            invoke-static { v$firstParameterRegister }, Lapp/morphe/extension/shared/patches/PhotosOnlyBackupFilter;->onBackupQueryStart(Ljava/lang/Object;)V
+            move-object/from16 v0, v$firstParameterRegister
+            invoke-static { v0 }, Lapp/morphe/extension/shared/patches/PhotosOnlyBackupFilter;->onBackupQueryStart(Ljava/lang/Object;)V
             """.trimIndent(),
         )
     }
