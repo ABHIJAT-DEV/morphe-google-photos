@@ -75,9 +75,9 @@ Replaced legacy floating overlays with a native, full-screen Material 3 settings
 ## 🩹 Patches List
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.17.11](https://github.com/Akash-Sriram/morphe-google-photos/releases/tag/v1.17.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
+> **[v1.0.0](https://github.com/ABHIJAT-DEV/morphe-google-photos/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;9 patches total
 <details open>
-<summary>📦 Google Photos&nbsp;&nbsp;•&nbsp;&nbsp;8 patches</summary>
+<summary>📦 Google Photos&nbsp;&nbsp;•&nbsp;&nbsp;9 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -95,6 +95,7 @@ Replaced legacy floating overlays with a native, full-screen Material 3 settings
 | [Media engine & AI fixes](#media-engine-ai-fixes) | Bypasses the 0MB Mobile Data Download check for AI models and fixes font loading across Stories and UI to prevent blank text and fallback fonts. |
 | [Official package name](#official-package-name) | Retains the official package name (com.google.android.apps.photos) instead of renaming to app.morphe.android.apps.photos and disables Play Store updates by setting the version code to maximum to prevent automatic overwriting. This is strictly for non-root users whose devices do not have Google Photos preinstalled by the OEM. |
 | [Spoof features](#spoof-features) | Spoofs the device to enable Google Pixel exclusive features, including unlimited storage. |
+| [Upload photos only](#upload-photos-only) | Adds an 'Upload photos only' toggle to Morphe Settings. When enabled, automatic backup uploads photos but never videos: video items are excluded from the backup queue, while photos keep following the existing backup settings (device folders, backup quality and the master backup toggle). Manual backup of a single item is not affected. |
 
 </details>
 

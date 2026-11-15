@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.17.11",
+  "version": "1.0.0",
   "patches": [
     {
       "name": "AMOLED dark theme",
@@ -255,6 +255,33 @@
           }
         }
       ]
+    },
+    {
+      "name": "Upload photos only",
+      "description": "Adds an 'Upload photos only' toggle to Morphe Settings. When enabled, automatic backup uploads photos but never videos: video items are excluded from the backup queue, while photos keep following the existing backup settings (device folders, backup quality and the master backup toggle). Manual backup of a single item is not affected.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.google.android.apps.photos",
+          "name": "Google Photos",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FC3F3C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "7.99.0.1007655401",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
     }
   ]
 }
