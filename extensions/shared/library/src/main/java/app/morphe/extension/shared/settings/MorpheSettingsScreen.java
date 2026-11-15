@@ -22,11 +22,13 @@ import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ import app.morphe.extension.shared.patches.PhenotypeFlagManager;
 import app.morphe.extension.shared.patches.PhenotypeFlagManager.MaterialVectorDrawable;
 import app.morphe.extension.shared.patches.PhenotypeFlagManager.Theme;
 import app.morphe.extension.shared.patches.PhotosModelSeeder;
+import app.morphe.extension.shared.patches.PhotosOnlyBackupFilter;
 import app.morphe.extension.shared.patches.flags.PhotoFlagsRegistry;
 import app.morphe.extension.shared.patches.toolkit.NativeToolkitDialog;
 
@@ -307,6 +310,22 @@ public final class MorpheSettingsScreen {
                 "Backup Storage Profile",
                 DeviceSpoofHelper.getProfileDisplayName(),
                 () -> showBackupProfileDialog(activity, onBack, theme)));
+
+        backupGroup.addView(createItemDivider(activity, density, theme));
+
+        backupGroup.addView(createSwitchPreferenceItem(activity, density, theme,
+                "quantum_gm_ic_image_vd_theme_24",
+                MaterialVectorDrawable.TYPE_PHOTO,
+                "Upload photos only",
+                "Automatic backup uploads photos but skips videos",
+                PhotosOnlyBackupFilter.isEnabled(),
+                (buttonView, isChecked) -> {
+                    PhotosOnlyBackupFilter.setEnabled(activity, isChecked);
+                    Toast.makeText(activity, isChecked
+                            ? "Upload photos only: ON — videos will not be backed up automatically"
+                            : "Upload photos only: OFF — videos will back up again",
+                            Toast.LENGTH_SHORT).show();
+                }));
 
         content.addView(backupGroup);
 

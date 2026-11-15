@@ -50,6 +50,13 @@ internal object BackupEligibilityQueryFingerprint : Fingerprint(
     strings = listOf(" OR backup_folders.bucket_id IS NOT NULL "),
 )
 
+// Same backup queue query builder method (Luiz.g), fingerprinted separately
+// for the Upload photos only patch so the two patches stay independent.
+internal object UploadPhotosOnlyQueryFingerprint : Fingerprint(
+    returnType = "Ljava/lang/String;",
+    strings = listOf(" OR backup_folders.bucket_id IS NOT NULL "),
+)
+
 internal object UploadStatusModelViewModelFingerprint : Fingerprint(
     strings = listOf("UploadStatusModelViewModel"),
 )
